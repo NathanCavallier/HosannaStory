@@ -1,0 +1,41 @@
+{
+  "development": {
+    "username": "admin@BrotherNathan.onmicrosoft.com",
+    "password": null,
+    "database": "children_stories_db_dev", 
+    "host": "children-stories-server.database.windows.net",
+    "dialect": "mssql",
+    "dialectOptions": {
+      "options": {
+        "encrypt": true,
+        "enableArithAbort": true
+      }
+    }
+  },
+  "test": {
+    "username": "admin@BrotherNathan.onmicrosoft.com",
+    "password": null,
+    "database": "children_stories_db_dev",
+    "host": "children-stories-server.database.windows.net",
+    "dialect": "mssql",
+    "dialectOptions": {
+      "options": {
+        "encrypt": true,
+        "enableArithAbort": true
+      }
+    }
+  },
+  "production": {
+    "username": "admin@BrotherNathan.onmicrosoft.com",
+    "password": null,
+    "database": "children_stories_db",
+    "host": "children-stories-server.database.windows.net",
+    "dialect": "mssql",
+    "dialectOptions": {
+      "options": {
+        "encrypt": true,
+        "enableArithAbort": true
+      }
+    }
+  }
+}

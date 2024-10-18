@@ -1,25 +1,43 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database"); // Assurez-vous que le chemin est correct
 
-// Définition du schéma commentaire
-const commentSchema = new mongoose.Schema({
-  story: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Story",
-    required: true, // Le commentaire est lié à une histoire
+const Comment = sequelize.define(
+  "Comment",
+  {
+    storyId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Stories", // Nom de la table des histoires
+        key: "id",
+      },
+    },
+    authorId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Users", // Nom de la table des utilisateurs
+        key: "id",
+      },
+    },
+    content: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
   },
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true, // L'auteur du commentaire est un utilisateur
-  },
-  content: {
-    type: String,
-    required: true, // Le texte du commentaire
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  {
+    tableName: "Comments", // Nom de la table des commentaires
+    timestamps: false, // Si vous n'utilisez pas les champs createdAt et updatedAt par défaut de Sequelize
+  }
+);
 
-module.exports = mongoose.model("Comment", commentSchema);
+Comment.associate = function (models) {
+  Comment.belongsTo(models.Story, { as: "story", foreignKey: "storyId" });
+  Comment.belongsTo(models.User, { as: "author", foreignKey: "authorId" });
+};
+
+module.exports = Comment;

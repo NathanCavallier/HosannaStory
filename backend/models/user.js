@@ -1,79 +1,88 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const { Sequelize, DataTypes, Model } = require("sequelize");
 const bcrypt = require("bcryptjs");
+const sequelize = new Sequelize("database", "username", "password", {
+  host: "localhost",
+  dialect: "sqlite", // or 'mysql', 'sqlite', 'mariadb', 'mssql'
+});
 
-// Définition du schéma utilisateur
-const UserSchema = new Schema(
+class User extends Model {
+  async comparePassword(password) {
+    return await bcrypt.compare(password, this.password);
+  }
+}
+
+User.init(
   {
     first_name: {
-      type: String,
-      required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
       unique: true,
     },
     last_name: {
-      type: String,
-      required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
       unique: true,
     },
     email: {
-      type: String,
-      required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
       unique: true,
     },
     password: {
-      type: String,
-      required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     avatar: {
-      type: String,
-      default: "https://i.imgur.com/2dJf1Uz.png",
+      type: DataTypes.STRING,
+      defaultValue: "https://i.imgur.com/2dJf1Uz.png",
     },
-    likedStories: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Story",
+    likedStories: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER), // Assuming Story IDs are integers
+      references: {
+        model: "Stories", // Name of the referenced model
+        key: "id",
       },
-    ],
-    bookmarkedStories: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Story",
+    },
+    bookmarkedStories: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER), // Assuming Story IDs are integers
+      references: {
+        model: "Stories", // Name of the referenced model
+        key: "id",
       },
-    ],
-    progress: [
-      {
-        story: {
-          type: Schema.Types.ObjectId,
-          ref: "Story",
-        },
-        chapter: {
-          type: Schema.Types.ObjectId,
-          ref: "Chapter",
-        },
-        progressInSeconds: Number,
-        date: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
+    },
+    progress: {
+      type: DataTypes.JSONB, // Storing progress as JSON
+      defaultValue: [],
+    },
   },
   {
+    sequelize,
+    modelName: "User",
     timestamps: true,
+    hooks: {
+      beforeSave: async (user, options) => {
+        if (user.changed("password")) {
+          const salt = await bcrypt.genSalt(10);
+          user.password = await bcrypt.hash(user.password, salt);
+        }
+      },
+    },
   }
 );
 
-// Middleware pour hacher le mot de passe avant de sauvegarder
-UserSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
-
-// Méthode pour comparer les mots de passe
-UserSchema.methods.comparePassword = async function (password) {
-  return await bcrypt.compare(password, this.password);
+User.associate = function (models) {
+  User.hasMany(models.Story, { as: "author", foreignKey: "authorId" });
+  User.belongsToMany(models.Story, {
+    through: "StoryLikes",
+    as: "likedStories",
+    foreignKey: "userId",
+  });
+  User.belongsToMany(models.Story, {
+    through: "StoryBookmarks",
+    as: "bookmarkedStories",
+    foreignKey: "userId",
+  });
+  User.hasMany(models.Progress, { as: "progress", foreignKey: "userId" });
 };
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = User;

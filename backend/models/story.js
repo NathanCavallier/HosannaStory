@@ -1,64 +1,61 @@
 // models/Story.js
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database"); // Assurez-vous que le chemin est correct
 
-const StorySchema = new Schema(
+const Story = sequelize.define(
+  "Story",
   {
     title: {
-      type: String,
-      required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     description: {
-      type: String,
-      required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    author: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+    picture: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "https://via.placeholder.com/150",
     },
-    categories: [String], // For different genres of stories
-    coverImage: String, // URL or path to the cover image
-    chapters: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Chapter", // Refer to the Chapter model
+    authorId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "Users", // Nom du modèle User
+        key: "id",
       },
-    ],
-    likes: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User", // Users who liked the story
-      },
-    ],
-    bookmarks: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User", // Users who bookmarked the story
-      },
-    ],
-    progress: [
-      {
-        user: {
-          type: Schema.Types.ObjectId,
-          ref: "User",
-          required: true,
-        },
-        chapter: {
-          type: Schema.Types.ObjectId,
-          ref: "Chapter",
-        },
-        progressInSeconds: Number, // For audio/video or text-based reading progress
-        date: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
+    },
+    published: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    categories: {
+      type: DataTypes.ARRAY(DataTypes.STRING), // Pour PostgreSQL, utilisez JSON pour MySQL
+    },
+    coverImage: {
+      type: DataTypes.STRING,
+    },
   },
   {
-    timestamps: true, // Adds createdAt and updatedAt timestamps
+    timestamps: true,
   }
 );
 
-module.exports = mongoose.model("Story", StorySchema);
+Story.associate = function (models) {
+  Story.belongsTo(models.User, { as: "author", foreignKey: "authorId" });
+  Story.hasMany(models.Chapter, { as: "chapters", foreignKey: "storyId" });
+  Story.belongsToMany(models.User, {
+    through: "StoryLikes",
+    as: "likes",
+    foreignKey: "storyId",
+  });
+  Story.belongsToMany(models.User, {
+    through: "StoryBookmarks",
+    as: "bookmarks",
+    foreignKey: "storyId",
+  });
+  Story.hasMany(models.Progress, { as: "progress", foreignKey: "storyId" });
+};
+
+module.exports = Story;

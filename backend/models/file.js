@@ -1,25 +1,38 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database"); // Assurez-vous que le chemin est correct
 
-// Définition du schéma fichier
-const fileSchema = new mongoose.Schema({
-  story: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Story",
-    required: true, // Chaque fichier est lié à une histoire
+const File = sequelize.define(
+  "File",
+  {
+    storyId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Stories", // Nom de la table référencée
+        key: "id",
+      },
+      allowNull: false,
+    },
+    fileType: {
+      type: DataTypes.ENUM("audio", "video", "pdf"),
+      allowNull: false,
+    },
+    fileUrl: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    uploadedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
   },
-  fileType: {
-    type: String,
-    enum: ["audio", "video", "pdf"], // Type de fichier
-    required: true,
-  },
-  fileUrl: {
-    type: String, // URL ou chemin du fichier
-    required: true,
-  },
-  uploadedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  {
+    tableName: "Files", // Nom de la table
+    timestamps: false, // Désactive les timestamps automatiques (createdAt, updatedAt)
+  }
+);
 
-module.exports = mongoose.model("File", fileSchema);
+File.associate = function (models) {
+  File.belongsTo(models.Story, { as: "story", foreignKey: "storyId" });
+};
+
+module.exports = File;

@@ -1,40 +1,60 @@
-// models/Chapter.js
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+// models/chapter.js
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database"); // Assurez-vous que ce chemin est correct
 
-const ChapterSchema = new Schema(
+const Chapter = sequelize.define(
+  "Chapter",
   {
-    story: {
-      type: Schema.Types.ObjectId,
-      ref: "Story",
-      required: true,
+    storyId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Stories", // Nom de la table des histoires
+        key: "id",
+      },
+      allowNull: false,
     },
     title: {
-      type: String,
-      required: true,
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    illustration: {
+      type: DataTypes.STRING,
+    },
+    picture: {
+      type: DataTypes.STRING,
+    },
+    listeningTime: {
+      type: DataTypes.INTEGER,
+    },
+    position: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     contentText: {
-      type: String, // For text-based stories
-      required: true,
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
-    audioFile: String, // URL/path for audio version of the chapter
-    videoFile: String, // URL/path for video version of the chapter
-    likes: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
-    bookmarks: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-      },
-    ],
+    audioFile: {
+      type: DataTypes.STRING,
+    },
+    videoFile: {
+      type: DataTypes.STRING,
+    },
+    likes: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER), // Assuming likes are stored as an array of user IDs
+    },
+    bookmarks: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER), // Assuming bookmarks are stored as an array of user IDs
+    },
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("Chapter", ChapterSchema);
+Chapter.associate = function (models) {
+  Chapter.belongsTo(models.Story, { as: "story", foreignKey: "storyId" });
+  Chapter.hasMany(models.Comment, { as: "comments", foreignKey: "chapterId" });
+};
+
+module.exports = Chapter;

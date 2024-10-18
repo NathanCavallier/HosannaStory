@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User.js"); // Importer le modèle utilisateur
+const User = require("../models/user"); // Importer le modèle utilisateur
 require("dotenv").config();
 
 const router = express.Router();
