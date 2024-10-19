@@ -1,0 +1,21 @@
+.bookmark-button {
+    background-color: white;
+    color: #FF914D;
+    /* Primary color */
+    border: 1px solid #FF914D;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.bookmark-button.bookmarked {
+    background-color: #FF914D;
+    color: white;
+}
+
+.bookmark-button:hover {
+    background-color: #e07d3c;
+    color: white;
+}

@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "hosanna-story-backend",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {

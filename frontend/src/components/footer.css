@@ -1,0 +1,22 @@
+.footer {
+    background-color: #737373;
+    /* Secondary color */
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer p {
+    margin: 0;
+}
+
+.footer a {
+    color: #FF914D;
+    /* Primary color */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}

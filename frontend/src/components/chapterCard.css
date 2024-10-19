@@ -1,0 +1,36 @@
+.chapter-card {
+    background-color: #f9f9f9;
+    border: 1px solid #FF914D;
+    /* Primary color */
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: box-shadow 0.3s ease;
+}
+
+.chapter-card:hover {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.chapter-card h4 {
+    color: #FF914D;
+    /* Primary color */
+    margin-bottom: 10px;
+}
+
+.chapter-card p {
+    font-size: 1em;
+    color: #737373;
+    /* Secondary color */
+}
+
+.chapter-card a {
+    text-decoration: none;
+    color: #FF914D;
+    /* Primary color */
+    font-weight: bold;
+}
+
+.chapter-card a:hover {
+    text-decoration: underline;
+}
