@@ -14,6 +14,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      story_type: {
+        type: Sequelize.STRING, // "Sleep Story", "Short Story", "Poem", "Fable" etc.
+        allowNull: false,
+      },
       description: {
         type: Sequelize.STRING,
         allowNull: false,

@@ -1,60 +1,70 @@
-"use client"; // Ajoutez cette ligne en haut du fichier
+"use client";
 
 import React from 'react';
+import './header.css';
+import '../app/globals.css';
+import Link from 'next/link';
 import Image from 'next/image';
-import { FaHome, FaUserFriends, FaBriefcase, FaComments, FaBell, FaEllipsisH, FaSearch } from 'react-icons/fa';
-import './Header.css';
-import logo from "../../public/images/logo_x2.png";
+import logo from '../../public/images/logo_hosanna-story-gray.png';
+import {
+    FaUser,
+} from 'react-icons/fa';
+import { IoMdLogIn } from "react-icons/io";
+import { IoMdPersonAdd } from "react-icons/io";
 
-const Header: React.FC = () => {
+
+
+interface HeaderProps {
+    isAuthenticated: boolean;
+    username?: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ isAuthenticated, username }) => {
+
     return (
         <header className="header">
-            <div className="left-section">
-                <div className="logo">
-                    <Image src={logo} alt="Hosanna Story Logo" width={200} height={100} />
-                </div>
-                <div className="search-bar">
-                    <FaSearch className="search-icon" />
-                    <input type="text" placeholder="Recherche" />
-                </div>
+            <div className="header__logo">
+                <Link href="/">
+                    <Image src={logo} alt="Hosanna Story" className="logo" />
+                </Link>
             </div>
+            <div className="header__icons">
+                {isAuthenticated ? (
+                    <>
 
-            <div className="middle-section">
-                <nav className="menu">
-                    <a href="/" className="menu-item">
-                        <FaHome />
-                        <span>Accueil</span>
-                    </a>
-                    <a href="/network" className="menu-item">
-                        <FaUserFriends />
-                        <span>Réseau</span>
-                    </a>
-                    <a href="/jobs" className="menu-item">
-                        <FaBriefcase />
-                        <span>Offres d&apos;emploi</span>
-                    </a>
-                    <a href="/messaging" className="menu-item">
-                        <FaComments />
-                        <span>Messagerie</span>
-                    </a>
-                    <a href="/notifications" className="menu-item">
-                        <FaBell />
-                        <span>Notifications</span>
-                    </a>
-                </nav>
-            </div>
-
-            <div className="right-section">
-                <div className="profile">
-                    <img src="/profile-pic.jpg" alt="Profil" className="profile-pic" />
-                    <div className="dropdown">
-                        <span>Nom Prénom</span>
-                        <FaEllipsisH />
+                        <li className="header__nav-item">
+                            <Link href="/favoris">Favoris</Link>
+                        </li>
+                        <div className="header__profile">
+                            <FaUser className="header__profile-icon" />
+                            <span className="header__profile-name">{username}</span>
+                        </div>
+                        <div className="header__notifications">
+                            <i className="icon-bell"></i>
+                        </div>
+                    <div className="header__auth" style={{ marginRight: 30, display: 'flex', justifyContent: 'space-between' }}>
+                        <button className="header__auth-btn" style={{ display: 'flex', justifyContent: 'space-between', marginRight: 15 }}>
+                            <IoMdLogIn className="header__auth-icon" width={20} height={20} style={{ marginRight: 5, marginTop: 4 }} />
+                            Déconnexion
+                        </button>
+                        <button className="header__auth-btn" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <IoMdPersonAdd className="header__auth-icon" style={{ marginRight: 5, marginTop: 2 }} />
+                            Inscription
+                        </button>
                     </div>
-                </div>
-                <a href="/premium" className="premium-link">
-                    Réessayez pour 0 EUR
-                </a>
+                    </>
+                ) : (
+                    <div className="header__auth" style={{ marginRight: 30, display: 'flex', justifyContent: 'space-between' }}>
+                        <button className="header__auth-btn" style={{ display: 'flex', justifyContent: 'space-between', marginRight: 15 }}>
+                            <IoMdLogIn className="header__auth-icon" width={20} height={20} style={{ marginRight: 5, marginTop: 4 }} />
+                            Connexion
+                        </button>
+                        <button className="header__auth-btn" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <IoMdPersonAdd className="header__auth-icon" style={{ marginRight: 5, marginTop: 2 }} />
+                            Inscription
+                        </button>
+                    </div>
+                )}
             </div>
         </header>
     );

@@ -1,4 +1,4 @@
-.bookmark-button {
+.like-button {
     background-color: transparent;
     border: none;
     color: #2F2F2F;
@@ -7,6 +7,6 @@
     padding: 10px;
 }
 
-.bookmarked {
+.liked {
     color: #BFA054;
 }

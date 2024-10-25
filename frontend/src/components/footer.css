@@ -1,9 +1,12 @@
 .footer {
-    background-color: #737373;
-    /* Secondary color */
-    color: white;
+    background-color: #2F2F2F; /* Secondary color */
+    color: #FBF8F2; /* Secondary color */
     padding: 20px 0;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
 }
 
 .footer p {
@@ -11,12 +14,34 @@
 }
 
 .footer a {
-    color: #FF914D;
-    /* Primary color */
+    color: #BFA054; /* Primary color */
     text-decoration: none;
     font-weight: bold;
 }
 
 .footer a:hover {
     text-decoration: underline;
+}
+
+.footer {
+    background-color: #2F2F2F;
+    color: #F5EFE1;
+    padding: 30px;
+    text-align: center;
+}
+
+.footer-bottom {
+    margin-top: 20px;
+}
+
+.footer-links a {
+    color: #BFA054;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.social-media .icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
 }

@@ -13,6 +13,10 @@ const Story = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    story_type: {
+      type: DataTypes.STRING, // "Sleep Story", "Short Story", "Poem", "Fable" etc.
+      allowNull: false,
+    },
     picture: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -26,7 +30,7 @@ const Story = sequelize.define(
         key: "id",
       },
     },
-    published: {
+    isPublished: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
@@ -35,6 +39,10 @@ const Story = sequelize.define(
     },
     coverImage: {
       type: DataTypes.STRING,
+    },
+    isFavorite: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {

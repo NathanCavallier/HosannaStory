@@ -20,10 +20,10 @@ import {
 import { FaChildren } from "react-icons/fa6";
 
 
-export default function Home() {
+export default function Library() {
   const [backgroundImage, setBackgroundImage] = useState(background_image);
-  const [accueilBtnStyle, setAccueilBtnStyle] = useState('header__nav-item--active');
-  const [histoiresBtnStyle, setHistoiresBtnStyle] = useState('header__nav-item');
+  const [accueilBtnStyle, setAccueilBtnStyle] = useState('header__nav-item');
+  const [histoiresBtnStyle, setHistoiresBtnStyle] = useState('header__nav-item--active');
   const [livresAudioBtnStyle, setLivresAudioBtnStyle] = useState('header__nav-item');
   const [enfantsBtnStyle, setEnfantsBtnStyle] = useState('header__nav-item');
   const [defisRecompensesBtnStyle, setDefisRecompensesBtnStyle] = useState('header__nav-item');
@@ -113,7 +113,7 @@ export default function Home() {
             </div>
             <div className={histoiresBtnStyle} onClick={handleHistoiresBtnStyle} style={{ display: 'flex', justifyContent: 'space-between' }}>
               <FaBook style={{ marginRight: 6, marginTop: 4 }} />
-              <Link href="/pages/library">Bibliothèque</Link>
+              <Link href="/pages/stories/index">Bibliothèque</Link>
             </div>
             <div className={livresAudioBtnStyle} onClick={handleLivresAudioBtnStyle} style={{ display: 'flex', justifyContent: 'space-between' }}>
               <FaPodcast style={{ marginRight: 6, marginTop: 4 }} />

@@ -1,4 +1,4 @@
-import { updateStory } from "../../../backend/controllers/storyController"; // Assurez-vous que le modèle Story est correctement défini
+import { updateStory } from "../../../../backend/controllers/storyController"; // Assurez-vous que le modèle Story est correctement défini
 
 export default async function handler(req, res) {
   if (req.method === "PUT") {
