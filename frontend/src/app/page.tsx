@@ -101,7 +101,7 @@ export default function Home() {
         {/* Barre de recherche */}
         <section className={`search-bar_section ${isScrolled ? 'sub-header--scrolled' : ''}`} style={{ display: 'flex', alignContent: 'flex-start', justifyContent: 'space-between', marginBottom: 25, marginTop: 0 }}>
           <div style={{ display: 'flex', alignContent: 'flex-start', justifyContent: 'space-between' }} >
-            <input className="search-bar" type="text" placeholder="Search for books..." style={{ marginRight: 5, borderRadius: 0, width: 300 }} />
+            <input className="search-bar" type="text" placeholder="Rechercher un livre..." style={{ marginRight: 5, borderRadius: 0, width: 300 }} />
             <button className="search-btn">
               <FaSearch />
             </button>
@@ -113,7 +113,7 @@ export default function Home() {
             </div>
             <div className={histoiresBtnStyle} onClick={handleHistoiresBtnStyle} style={{ display: 'flex', justifyContent: 'space-between' }}>
               <FaBook style={{ marginRight: 6, marginTop: 4 }} />
-              <Link href="/pages/library">Bibliothèque</Link>
+              <Link href="/library">Bibliothèque</Link>
             </div>
             <div className={livresAudioBtnStyle} onClick={handleLivresAudioBtnStyle} style={{ display: 'flex', justifyContent: 'space-between' }}>
               <FaPodcast style={{ marginRight: 6, marginTop: 4 }} />

@@ -1,0 +1,52 @@
+/* bookCard.css */
+
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.book-card {
+  background-color: #FBF8F2;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+}
+
+.book-image {
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.book-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #2F2F2F;
+}
+
+.book-description {
+  font-size: 1rem;
+  color: #858585;
+  margin-bottom: 16px;
+}
+
+.book-link {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #BFA054;
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.book-link:hover {
+  background-color: #2F2F2F;
+}

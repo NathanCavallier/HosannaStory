@@ -3,14 +3,15 @@
 import React from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import "./page.css";
-import "./globals.css";
+import "./style.css";
+import "../../app/globals.css";
 import Image from "next/image";
 import Link from "next/link";
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect } from "react";
-import background_image from "../../public/images/background1.png";
-import back_gradient2 from "../../public/images/back_gradient2.png";
+import { useRouter } from "next/router";
+import background_image from "../../../public/images/background1.png";
+import back_gradient2 from "../../../public/images/back_gradient2.png";
 import {
   FaHome,
   FaBook,
@@ -18,6 +19,24 @@ import {
   FaPodcast,
 } from 'react-icons/fa';
 import { FaChildren } from "react-icons/fa6";
+import BookCard from "@/components/BookCard";
+
+
+const books = [
+  {
+    id: 1,
+    title: 'Book 1',
+    description: 'Description of Book 1',
+    imageUrl: 'https://via.placeholder.com/150',
+  },
+  {
+    id: 2,
+    title: 'Book 2',
+    description: 'Description of Book 2',
+    imageUrl: 'https://via.placeholder.com/150',
+  },
+  // Ajoutez d'autres livres ici
+];
 
 
 export default function Library() {
@@ -28,6 +47,10 @@ export default function Library() {
   const [enfantsBtnStyle, setEnfantsBtnStyle] = useState('header__nav-item');
   const [defisRecompensesBtnStyle, setDefisRecompensesBtnStyle] = useState('header__nav-item');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredBooks, setFilteredBooks] = useState(books);
+  const router = useRouter();
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   //#region Button Styles
   const handleAccueilBtnStyle = () => {
@@ -88,6 +111,23 @@ export default function Library() {
     };
   }, []);
 
+  useEffect(() => {
+    const results = books.filter((book) =>
+      book.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredBooks(results);
+  }, [searchTerm]);
+
+  const handleSearchChange = (e: { target: { value: string; }; }) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+  };
+
+  const handleResultClick = (id: number) => {
+    setIsDropdownVisible(false);
+    router.push(`/library/${id}`);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <div className="background-image">
@@ -101,10 +141,30 @@ export default function Library() {
         {/* Barre de recherche */}
         <section className={`search-bar_section ${isScrolled ? 'sub-header--scrolled' : ''}`} style={{ display: 'flex', alignContent: 'flex-start', justifyContent: 'space-between', marginBottom: 25, marginTop: 0 }}>
           <div style={{ display: 'flex', alignContent: 'flex-start', justifyContent: 'space-between' }} >
-            <input className="search-bar" type="text" placeholder="Search for books..." style={{ marginRight: 5, borderRadius: 0, width: 300 }} />
+            <input
+              className="search-bar"
+              type="text"
+              placeholder="Rechercher un livre..."
+              style={{ marginRight: 5, borderRadius: 0, width: 300 }}
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
             <button className="search-btn">
               <FaSearch />
             </button>
+            {isDropdownVisible && (
+              <div className="search-dropdown">
+                {filteredBooks.map((book) => (
+                  <div
+                    key={book.id}
+                    className="search-result"
+                    onClick={() => handleResultClick(book.id)}
+                  >
+                    {book.title}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <div style={{ display: 'flex', alignContent: 'flex-end', justifyContent: 'space-between' }} >
             <div className={accueilBtnStyle} onClick={handleAccueilBtnStyle} style={{ display: 'flex', justifyContent: 'space-between', marginLeft: 150 }}>
@@ -113,7 +173,7 @@ export default function Library() {
             </div>
             <div className={histoiresBtnStyle} onClick={handleHistoiresBtnStyle} style={{ display: 'flex', justifyContent: 'space-between' }}>
               <FaBook style={{ marginRight: 6, marginTop: 4 }} />
-              <Link href="/pages/stories/index">Bibliothèque</Link>
+              <Link href="/library/">Bibliothèque</Link>
             </div>
             <div className={livresAudioBtnStyle} onClick={handleLivresAudioBtnStyle} style={{ display: 'flex', justifyContent: 'space-between' }}>
               <FaPodcast style={{ marginRight: 6, marginTop: 4 }} />
@@ -129,31 +189,18 @@ export default function Library() {
             </div>
           </div>
         </section>
-        {/* Hero Section */}
-        <section className="hero" style={{ marginBottom: 15 }}>
-          <div className="hero-text">
-            <h1>Discover Biblical Stories</h1>
-            <p>Un voyage à travers des histoires intemporelles vous attend.</p>
-            <a href="#catalog" className="cta-btn" style={{ marginTop: 25 }}>Parcourir le catalogue</a>
-          </div>
-          {/* Carousel */}
-          <div className="carousel">
-            <div className="carousel-item">
-              <Image src="https://via.placeholder.com/800x400" alt="Slide 1" width={800} height={400} />
+
+        {/* Library Section */}
+        <section className="library">
+          {filteredBooks && filteredBooks.length > 0 ? (
+            <div className="books-grid">
+              {filteredBooks.map((book) => (
+                <BookCard key={book.id} id={book.id} title={book.title} description={book.description} imageUrl={book.imageUrl} />
+              ))}
             </div>
-            <div className="carousel-item">
-              <Image src="https://via.placeholder.com/800x400" alt="Slide 2" width={800} height={400} />
-            </div>
-            <div className="carousel-item">
-              <Image src="https://via.placeholder.com/800x400" alt="Slide 3" width={800} height={400} />
-            </div>
-            <div className="carousel-item">
-              <Image src="https://via.placeholder.com/800x400" alt="Slide 3" width={800} height={400} />
-            </div>
-            <div className="carousel-item">
-              <Image src="https://via.placeholder.com/800x400" alt="Slide 3" width={800} height={400} />
-            </div>
-          </div>
+          ) : (
+            <p>Pas de résultats</p>
+          )}
         </section>
 
         {/* New Arrivals Section */}
@@ -186,112 +233,6 @@ export default function Library() {
               <span>$16.99</span>
               <button>Add to Cart</button>
             </div>
-          </div>
-        </section>
-
-        {/* Section de Toutes les Histoires */}
-        <section className="all-stories" style={{ marginBottom: 15 }}>
-          <h2>Toutes les histoires</h2>
-          <div className="stories-grid">
-            <div className="story-item">
-              <Image src="https://via.placeholder.com/200" alt="Story 1" width={200} height={200} />
-              <p>Title of Story 1</p>
-              <span>$10.99</span>
-              <button>Add to Cart</button>
-            </div>
-            <div className="story-item">
-              <Image src="https://via.placeholder.com/200" alt="Story 2" width={200} height={200} />
-              <p>Title of Story 2</p>
-              <span>$12.99</span>
-              <button>Add to Cart</button>
-            </div>
-            <div className="story-item">
-              <Image src="https://via.placeholder.com/200" alt="Story 3" width={200} height={200} />
-              <p>Title of Story 3</p>
-              <span>$14.99</span>
-              <button>Add to Cart</button>
-            </div>
-            <div className="story-item">
-              <Image src="https://via.placeholder.com/200" alt="Story 4" width={200} height={200} />
-              <p>Title of Story 4</p>
-              <span>$16.99</span>
-              <button>Add to Cart</button>
-            </div>
-          </div>
-        </section>
-
-        {/* Section Histoires pour dormir */}
-        <section className="bedtime-stories" style={{ marginBottom: 15 }}>
-          <h2>Histoires pour dormir</h2>
-          <div className="stories-grid">
-            <div className="story-item">
-              <Image src="https://via.placeholder.com/200" alt="Bedtime Story 1" width={200} height={200} />
-              <p>Title of Bedtime Story 1</p>
-              <span>$10.99</span>
-              <button>Add to Cart</button>
-            </div>
-            <div className="story-item">
-              <Image src="https://via.placeholder.com/200" alt="Bedtime Story 2" width={200} height={200} />
-              <p>Title of Bedtime Story 2</p>
-              <span>$12.99</span>
-              <button>Add to Cart</button>
-            </div>
-            <div className="story-item">
-              <Image src="https://via.placeholder.com/200" alt="Bedtime Story 3" width={200} height={200} />
-              <p>Title of Bedtime Story 3</p>
-              <span>$14.99</span>
-              <button>Add to Cart</button>
-            </div>
-            <div className="story-item">
-              <Image src="https://via.placeholder.com/200" alt="Bedtime Story 4" width={200} height={200} />
-              <p>Title of Bedtime Story 4</p>
-              <span>$16.99</span>
-              <button>Add to Cart</button>
-            </div>
-          </div>
-        </section>
-
-        {/* Section Jeunesse */}
-        <section className="children-stories" style={{ marginBottom: 15 }}>
-          <h2>Histoires pour enfants</h2>
-          <div className="stories-grid">
-            <div className="story-item">
-              <Image src="https://via.placeholder.com/200" alt="Children's Story 1" width={200} height={200} />
-              <p>Title of Children&apos;s Story 1</p>
-              <span>$10.99</span>
-              <button>Add to Cart</button>
-            </div>
-            <div className="story-item">
-              <Image src="https://via.placeholder.com/200" alt="Children's Story 2" width={200} height={200} />
-              <p>Title of Children&apos;s Story 2</p>
-              <span>$12.99</span>
-              <button>Add to Cart</button>
-            </div>
-            <div className="story-item">
-              <Image src="https://via.placeholder.com/200" alt="Children's Story 3" width={200} height={200} />
-              <p>Title of Children&apos;s Story 3</p>
-              <span>$14.99</span>
-              <button>Add to Cart</button>
-            </div>
-            <div className="story-item">
-              <Image src="https://via.placeholder.com/200" alt="Children's Story 4" width={200} height={200} />
-              <p>Title of Children&apos;s Story 4</p>
-              <span>$16.99</span>
-              <button>Add to Cart</button>
-            </div>
-          </div>
-        </section>
-
-        {/* Catalog Section */}
-
-        {/* Catalog Section */}
-        <section className="catalog" style={{ marginBottom: 15 }}>
-          <h2>Catégories du catalogue</h2>
-          <div className="catalog-grid">
-            <div className="catalog-item">Books</div>
-            <div className="catalog-item">Audiobooks</div>
-            <div className="catalog-item">E-Books</div>
-            <div className="catalog-item">Children&apos;s Books</div>
           </div>
         </section>
       </main>
